@@ -1,35 +1,72 @@
 import {
+  
   StatusBar, 
-  StyleSheet, 
-  Text, 
+  StyleSheet,
+  StyleSheet2, 
   SafeAreaView, 
-  Image,
   View,
-  Dimensions
+  FlatList,
+
 } from 'react-native';
 
-import topo from './assets/topo.png'
-import logoVendedor from './assets/logo.png'
-
-const width = Dimensions.get('screen').width; //Dimensiona de acordo com a tela do dispositivo
-
+  import Topo from './source/telas/Carrinho/Topo.js';
+  import Detalhes from './source/telas/Carrinho/Detalhes.js';
+  import Mocks from './source/mocks/carrinho';
+  import Item from './source/telas/Carrinho/Item.js';
+  import Texto from './source/components/Texto.js';
+  
+  import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat'
+  // Constante que verifica se as fontes foram carregadas
+ 
+  
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_700Bold
+  });
+  
+
+  if (!fontsLoaded) {
+    return <View></View>
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <Image  style = {styles.topo} source = {topo}/>
-      <Text style = {styles.tituloCarrinho}>Carrinho</Text>
+     
+        <FlatList 
+          data={Mocks.itens.lista}
+          renderItem={Item}
+          keyExtractor={({nome}) => nome}   
+          ListHeaderComponent= {
+            () => {
+              return <>
+                <Topo {...Mocks.topo}/>
+                <Detalhes {...Mocks.detalhes} />
+                <Texto style = {styles.titulo}>
+                    {Mocks.itens.titulo}
+                </Texto>
+              </>
+            }
+          }   
+        />
+        
+        <FlatList
+          data= {Mocks.itens.lista2}
+          renderItem={Item}
+          keyExtractor={({nome}) => nome}
+          ListFooterComponent= {
+            () => {
+              return <>
+                    <Texto style = {styles.titulo2}>
+                    {Mocks.itens.titulo2}
+                    </Texto>
+              </>
+            }
+          }
+        />
 
-      <Text style = {styles.detalhes}>Detalhes do Carrinho</Text>
-      <Text style = {styles.titulo}>Kit IoT</Text>
-      <View style = {styles.vendedor}>
-        <Image style = {styles.logoVendedor} source = {logoVendedor} />
-        <Text style = {styles.nomevendedor}>Nuvem's Shopping</Text>
-      </View>
-      <Text style = {styles.desc}>Um kit IoT que revoluciona a vida dos estudantes</Text>
-      <Text style = {styles.preco}>R$ 99,00</Text>
+        <StatusBar />
 
-
-      <StatusBar />
     </SafeAreaView>
   );
 }
@@ -37,68 +74,22 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  
-  },
-
-  topo:{
-    width:"100%",
-    height: 585/772 * width
-  },
-
-  vendedor: {
-    flexDirection: "row",
-    padding: 10
-  },
-
-  nomevendedor: {
-    color: "#a3a3a3",
-    fontSize: 18,
-    lineHeight: 26,
-    marginLeft:10
-  },
-
-  logoVendedor: {
-    width:32,
-    height: 32,
-    marginLeft: 30,
-  },
-
-  tituloCarrinho: {
-    position:"absolute",
-    paddingVertical: 60,
-    textAlign: "center",
-    width:"100%",
-    fontSize: 25,
-    fontWeight: "bold",
-    lineHeight: 40, //afastamento entre linhas
-  },
-
-  detalhes: {
-    color: "#000000",
-    fontWeight:"bold",
-    fontSize: 30,
-    lineHeight: 35,
-    textAlign:"center"
+    backgroundColor: '#FFF'
   },
 
   titulo: {
-    color:"#ffa500",
-    fontWeight:"bold",
-    fontSize: 30,
-    lineHeight: 35,
-    textAlign:"center"
+    color: "#FFA500",
+    fontWeight:'bold',
+    marginTop: 30,
+    marginBottom: 30,
+    fontSize: 25,
   },
 
-  desc:{
-    color: "#808080",
-    fontSize: 16,
-    paddingVertical: 10
-  },
-
-  preco: {
-    fontSize: 35,
-    fontWeight:"bold",
-    textAlign:"right",
-    paddingHorizontal: 10
+  titulo2: {
+    color: "#000000",
+    fontWeight:'bold',
+    marginTop: 30,
+    marginBottom: 30,
+    fontSize: 25,
   }
 });
